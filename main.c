@@ -23,7 +23,7 @@ printf("(k) Ottumwa\n(l) Sioux City\n");
 printf("(m) Spencer\n(n) Waterloo\n");
 scanf("%c", &station_number);
 
-//After a-n is entered, choose the corresponding URL. Assuming a-n is entered for now.
+//After a-n is entered, choose the corresponding URL.
     switch(station_number){
 
     case 'a':
@@ -70,7 +70,7 @@ scanf("%c", &station_number);
         break;
 
     default:
-        printf("Invalid input. Your choice must be a-n.");
+        printf("Invalid input. Your choice must be a-n.\n");
         break;
     }
 
