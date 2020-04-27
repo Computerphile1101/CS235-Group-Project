@@ -11,6 +11,10 @@
 int main(int argc, char *argv){
 	
 char station_number;
+int portno = 80;
+char *host;
+host = "https://w1.weather.gov/xml/current_obs/seek.php?state=ia&Find=Find\n";
+char *message_fmt;
 
 //Creates a "menu" and asks user to choose a weather station.
 printf("Choose a weather station from the following list: (Enter a-n)\n");
@@ -32,45 +36,72 @@ scanf(" %c", &station_number);
 
     case 'a':
         //Get Ames URL
+message_fmt = "GET /xml/current_obs/KAMW.xml HTTP/1.0\r\nHost: www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
         break;
+
     case 'b':
         //Get Burlington URL
+message_fmt = "GET /xml/current_obs/KBRL.xml HTTP/1.0\r\nHost: www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
         break;
+
     case'c':
-        //Get Cedar Rapids URL
+	//Get Cedar Rapids URL
+message_fmt = "GET /xml/current_obs/KCID.xml HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
         break;
+
     case'd':
         //Get Council Bluffs URL
+message_fmt = "GET /xml/current_obs/KCBF.xml HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
         break;
+
     case'e':
         //Get Davenport URL
+message_fmt = "GET /xml/current_obs/KDVN.xml HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
         break;
+
     case'f':
         //Get Des Moines URL
+message_fmt = "GET /xml/current_obs/KDSM.xml HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
         break;
+
     case'g':
         //Get Dubuque URL
+message_fmt = "GET /xml/current_obs/KDBQ.xml HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
         break;
+
     case'h':
         //Get Fort Dodge URL
+message_fmt = "GET /xml/current_obs/KFOD.xml HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
         break;
+
     case'i':
         //Get Iowa City URL
+message_fmt = "GET /xml/current_obs/KIOW.xml HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
         break;
+
     case'j':
         //Get Mason City URL
+message_fmt = "GET /xml/current_obs/KMCW.xml HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
         break;
+
     case'k':
         //Get Ottumwa URL
+message_fmt = "GET /xml/current_obs/KOTM.xml HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
         break;
+
     case'l':
         //Get Sioux City URL
+message_fmt = "GET /xml/current_obs/KSUX.xml HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
         break;
+
     case'm':
         //Get Spencer URL
+message_fmt = "GET /xml/current_obs/KSPW.xml HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent:/1.0\r\nAccept:*/*";
         break;
+
     case'n':
         //Get Waterloo URL
+message_fmt = "GET /xml/current_obs/KALO.xml HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
         break;
 
     default:
@@ -84,6 +115,10 @@ scanf(" %c", &station_number);
          (station_number != 'g')&&(station_number != 'h')&&(station_number != 'i')&&
          (station_number != 'j')&&(station_number != 'k')&&(station_number != 'l')&&
          (station_number != 'm')&&(station_number != 'n'));
+
+
+//Rest of main code starts here.....
+
 
 
 }// end of main
