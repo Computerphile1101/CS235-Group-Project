@@ -19,12 +19,15 @@ int socket_connect(char *host, in_port_t port){
 		exit(1);
 	}
 	bcopy(hp->h_addr, &addr.sin_addr, hp->h_length);
+
+	//Assigning Port
 	addr.sin_port = htons(port);
 	addr.sin_family = AF_INET;
-	sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+	//	
+	sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP); // socket create and varification
 	setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (const char *)&on, sizeof(int));
 
-	if(sock == -1){
+	if(sock == -1){ //if this passes, the socket creation failed..
 		perror("setsockopt");
 		exit(1);
 	}
@@ -153,6 +156,12 @@ message_fmt = "GET /xml/current_obs/KALO.xml HTTP/1.0\r\nHost:www.weather.gov\r\
 
 write(fd, message_fmt, strlen(message_fmt)); // write(fd, char[]*, len);
 read(fd, buffer, sizeof(buffer)); 
+/*read will read up to nbytes bytes of data into memory starting at buf. It returns the
+number of bytes actually read, which may very well be less than nbytes. The case in
+which read returns fewer than nbytes is often called a “short read” and is a common
+source of errors. If read returns 0, this indicates an end of file. If it returns −1, this
+indicates an error.*/
+
 printf("From Server : %s", buffer); 
 
 //Rest of main code starts here.....
