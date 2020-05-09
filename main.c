@@ -9,45 +9,34 @@
 #include <netdb.h>
 #include <netinet/tcp.h>
 
-int socket_connect(char *host, in_port_t port){
-	struct hostent *hp;
-	struct sockaddr_in addr;
-	int on = 1, sock;     
-
-	if((hp = gethostbyname(host)) == NULL){
-		herror("gethostbyname");
-		exit(1);
-	}
-	bcopy(hp->h_addr, &addr.sin_addr, hp->h_length);
-
-	//Assigning Port
-	addr.sin_port = htons(port);
-	addr.sin_family = AF_INET;
-	//	
-	sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP); // socket create and varification
-	setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (const char *)&on, sizeof(int));
-
-	if(sock == -1){ //if this passes, the socket creation failed..
-		perror("setsockopt");
-		exit(1);
-	}
+int socket_connect(char *host, char *port){
 	
-	if(connect(sock, (struct sockaddr *)&addr, sizeof(struct sockaddr_in)) == -1){
-		perror("connect");
-		exit(1);
+	struct addrinfo hints, *res;    
+	int sockfd;  
 
-	}
-	return sock;
+	 //get host info, make socket and connect it
+	    memset(&hints, 0,sizeof hints);
+	    hints.ai_family=AF_UNSPEC;
+	    hints.ai_socktype = SOCK_STREAM;
+	    getaddrinfo(host, port, &hints, &res);
+	    sockfd = socket(res->ai_family,res->ai_socktype,res->ai_protocol);
+	    printf("Connecting...\n");
+	    connect(sockfd,res->ai_addr,res->ai_addrlen);
+	    printf("Connected!\n");
+	    char *header = "GET /KCID.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
+	    send(sockfd,header,strlen(header),0);
+	    printf("GET Sent...\n");
+	return sockfd;
 }
 
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 4096
 
 int main(int argc, char *argv){
 	
 char station_number;
-int portno = 80;
+char *port = "80";
 char *host;
-host = "w1.weather.gov";
+host = "www.n0gud.net";
 char *message_fmt;
 char buffer[BUFFER_SIZE];
 
@@ -64,7 +53,7 @@ printf("(m) Spencer\n(n) Waterloo\n");
 int fd;
 
 //Waits for user's choice to be a valid input.
-fd = socket_connect(host, portno);
+fd = socket_connect(host, port);
 
 do {
 
@@ -73,72 +62,72 @@ scanf(" %c", &station_number);
     switch(station_number){
     case 'a':
         //Get Ames URL
-message_fmt = "GET /xml/current_obs/KAMW.rss HTTP/1.0\r\nHost: www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
+message_fmt = "GET /KAMW.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
         break;
 
     case 'b':
         //Get Burlington URL
-message_fmt = "GET /xml/current_obs/KBRL.rss HTTP/1.0\r\nHost: www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
+message_fmt = "GET /KBRL.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
         break;
 
     case'c':
 	//Get Cedar Rapids URL
-message_fmt = "GET /xml/current_obs/KCID.rss HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
+message_fmt = "GET /KCID.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
         break;
 
     case'd':
         //Get Council Bluffs URL
-message_fmt = "GET /xml/current_obs/KCBF.rss HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
+message_fmt = "GET /KCFB.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
         break;
 
     case'e':
         //Get Davenport URL
-message_fmt = "GET /xml/current_obs/KDVN.rss HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
+message_fmt = "GET /KDVN.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
         break;
 
     case'f':
         //Get Des Moines URL
-message_fmt = "GET /xml/current_obs/KDSM.rss HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
+message_fmt = "GET /KDSM.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
         break;
 
     case'g':
         //Get Dubuque URL
-message_fmt = "GET /xml/current_obs/KDBQ.rss HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
+message_fmt = "GET /KDBQ.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
         break;
 
     case'h':
         //Get Fort Dodge URL
-message_fmt = "GET /xml/current_obs/KFOD.rss HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
+message_fmt = "GET /KFOD.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
         break;
 
     case'i':
         //Get Iowa City URL
-message_fmt = "GET /xml/current_obs/KIOW.rss HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
+message_fmt = "GET /KIOW.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
         break;
 
     case'j':
         //Get Mason City URL
-message_fmt = "GET /xml/current_obs/KMCW.rss HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
+message_fmt = "GET /KMCW.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
         break;
 
     case'k':
         //Get Ottumwa URL
-message_fmt = "GET /xml/current_obs/KOTM.rss HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
+message_fmt = "GET /KOTM.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
         break;
 
     case'l':
         //Get Sioux City URL
-message_fmt = "GET /xml/current_obs/KSUX.rss HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
+message_fmt = "GET /KSUX.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
         break;
 
     case'm':
         //Get Spencer URL
-message_fmt = "GET /xml/current_obs/KSPW.rss HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent:/1.0\r\nAccept:*/*";
+message_fmt = "GET /KSPW.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
         break;
 
     case'n':
         //Get Waterloo URL
-message_fmt = "GET /xml/current_obs/KALO.xml HTTP/1.0\r\nHost:www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept:*/*";
+message_fmt = "GET /KALO.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
         break;
 
     default:
@@ -153,84 +142,17 @@ message_fmt = "GET /xml/current_obs/KALO.xml HTTP/1.0\r\nHost:www.weather.gov\r\
          (station_number != 'j')&&(station_number != 'k')&&(station_number != 'l')&&
          (station_number != 'm')&&(station_number != 'n'));
 
+int byte_count;
+byte_count = recv(fd,buffer,sizeof(buffer)-1,0); // <-- -1 to leave room for a null terminator
+	buffer[byte_count] = 0; // <-- add the null terminator
+	printf("recv()'d %d bytes of data in buf\n",byte_count);
+	printf("%s",buffer);
+	printf("\n");
 
-write(fd, message_fmt, strlen(message_fmt)); // write(fd, char[]*, len);
-read(fd, buffer, sizeof(buffer)); 
-/*read will read up to nbytes bytes of data into memory starting at buf. It returns the
-number of bytes actually read, which may very well be less than nbytes. The case in
-which read returns fewer than nbytes is often called a “short read” and is a common
-source of errors. If read returns 0, this indicates an end of file. If it returns −1, this
-indicates an error.*/
-
-printf("From Server : %s", buffer); 
+//printf("From Server : %s", buffer); 
 
 //Rest of main code starts here.....
-printf("Message: %s\n", message_fmt);
+//printf("Message: %s\n", message_fmt);
 
 
 }// end of main
-
-
-//SCRATCHED THIS FOR NOW.
-/*
-	char state[3]; //includes \n
-	printf("Please enter your State\nEX. (IA)\n");
-	scanf("%s", state);	//Have them enter what state they want to display.
-	printf("You entered: %s\n", state); //displays state
-	
-	// first what are we going to send and where are we going to send it? 
-    int portno =        80;
-    char *host;
-    host = "https://w1.weather.gov/xml/current_obs/seek.php?state=ia&Find=Find\n";
-    char *message_fmt = "GET /xml/current_obs/KCID.xml HTTP/1.0\r\nHost: www.weather.gov\r\nConnection: close\r\nUser-Agent: /1.0\r\nAccept: ";
-    struct hostent *server;
-    struct sockaddr_in serv_addr;
-    int sockfd, bytes, sent, received, total;
-    char message[1024],response[4096];
-    // fill in the parameters 
-    sprintf(message,message_fmt,argv[1],argv[2]);
-    printf("Request:\n%s\n",message);
-    // create the socket 
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd < 0) error("ERROR opening socket");
-    // lookup the ip address 
-    server = gethostbyname(host);
-    if (server == NULL) error("ERROR, no such host");
-    // fill in the structure 
-    memset(&serv_addr,0,sizeof(serv_addr));
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(portno);
-    memcpy(&serv_addr.sin_addr.s_addr,server->h_addr,server->h_length);
-    // connect the socket 
-    if (connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr)) < 0)
-        error("ERROR connecting");
-    // send the request //
-    total = strlen(message);
-    sent = 0;
-    do {
-        bytes = write(sockfd,message+sent,total-sent);
-        if (bytes < 0)
-            error("ERROR writing message to socket");
-        if (bytes == 0)
-            break;
-        sent+=bytes;
-    } while (sent < total);
-    // receive the response 
-    memset(response,0,sizeof(response));
-    total = sizeof(response)-1;
-    received = 0;
-    do {
-        bytes = read(sockfd,response+received,total-received);
-        if (bytes < 0)
-            error("ERROR reading response from socket");
-        if (bytes == 0)
-            break;
-        received+=bytes;
-    } while (received < total);
-    if (received == total)
-        error("ERROR storing complete response from socket");
-    // close the socket
-    close(sockfd);
-    // process response
-    printf("Response:\n%s\n",response);
-*/
