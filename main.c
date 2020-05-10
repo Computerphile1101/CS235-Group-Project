@@ -9,7 +9,7 @@
 #include <netdb.h>
 #include <netinet/tcp.h>
 
-int socket_connect(char *host, char *port){
+int socket_connect(char *host, char *port, char *header){
 	
 	struct addrinfo hints, *res;    
 	int sockfd;  
@@ -23,12 +23,23 @@ int socket_connect(char *host, char *port){
 	    printf("Connecting...\n");
 	    connect(sockfd,res->ai_addr,res->ai_addrlen);
 	    printf("Connected!\n");
-	    char *header = "GET /KCID.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
+	    //char *header = "GET /KCID.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
 	    send(sockfd,header,strlen(header),0);
 	    printf("GET Sent...\n");
 	return sockfd;
 }
 
+/*	-----This function will be called 
+	to replace the 2nd while loops at the bottom---
+char *returnParsed(int start, int end, char buffer[]){
+	char *returnText[25];
+	while(start < end){
+		strncat(returnText, &buffer[start], 1);		
+		start++;
+	}
+	return returnText;
+}
+*/
 #define BUFFER_SIZE 4096
 
 int main(int argc, char *argv){
@@ -50,13 +61,7 @@ printf("(i) Iowa City\n(j) Mason City\n");
 printf("(k) Ottumwa\n(l) Sioux City\n");
 printf("(m) Spencer\n(n) Waterloo\n");
 
-int fd;
-
-//Waits for user's choice to be a valid input.
-fd = socket_connect(host, port);
-
 do {
-
 scanf(" %c", &station_number);
 //After a-n is entered, choose the corresponding URL.
     switch(station_number){
@@ -142,15 +147,103 @@ message_fmt = "GET /KALO.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
          (station_number != 'j')&&(station_number != 'k')&&(station_number != 'l')&&
          (station_number != 'm')&&(station_number != 'n'));
 
+int fd;
+//Waits for user's choice to be a valid input.
+fd = socket_connect(host, port, message_fmt);
+
 int byte_count;
 byte_count = recv(fd,buffer,sizeof(buffer)-1,0); // <-- -1 to leave room for a null terminator
 	buffer[byte_count] = 0; // <-- add the null terminator
 	printf("recv()'d %d bytes of data in buf\n",byte_count);
 	printf("%s",buffer);
-	printf("\n");
+	printf("\n\n");
 
-//printf("From Server : %s", buffer); 
+/* 
+----- What we need to parse ------
+Station – The 4 character station identifier <station_id></station_id>
+Location – Description of the location ‘CR, The Eastern Iowa Airport’ <location></location>
+Weather – Description of the conditions (i.e. Overcast) <weather></weather>
+Wind – String with wind speed and direction held between the tags <wind_string></wind_string>
+Temperature - Temp in F and C <temperature_string></temperature_string>
+Humidity – Percent humidity <relative_humidity></relative_humidity>
 
+You may include additional information held in other tags within the data  (like pressure_string, visibility_mi, etc)
+
+
+*/
+int index = 0;
+
+int stationStart = 0;
+int stationEnd = 0;
+char stationText[10];
+
+int locationStart = 0;
+int locationEnd = 0;
+char locationText[50];//these have to be big enough otherwise it will
+//cause errors.
+
+int weatherStart = 0;
+int weatherEnd = 0;
+char weatherText[40];
+
+while(index < byte_count-5){
+
+	/*Finding Station Tags*/
+	if(buffer[index] == '<' &&  buffer[index+1] == 's' && buffer[index+2] == 't' && 			buffer[index+3] == 'a'){
+		stationStart = index+12;//12 spots after the starting point of <
+	}
+	if(buffer[index] == '<' &&  buffer[index+1] == '/' && buffer[index+2] == 's' && 			buffer[index+3] == 't' && buffer[index+4] == 'a'){
+		stationEnd = index;
+	}
+	/*End Finding Station Tags*/
+	/*Finding Location Tags*/
+	if(buffer[index] == '<' &&  buffer[index+1] == 'l' && buffer[index+2] == 'o' && 			buffer[index+3] == 'c'){
+		locationStart = index+10;
+	}
+	if(buffer[index] == '<' &&  buffer[index+1] == '/' && buffer[index+2] == 'l' && 			buffer[index+3] == 'o' && buffer[index+4] == 'c'){
+		locationEnd = index;
+	}
+	/*End Finding Location Tags*/
+	/*Finding Weather Tags*/
+	if(buffer[index] == '<' &&  buffer[index+1] == 'w' && buffer[index+2] == 'e' && 			buffer[index+3] == 'a'){
+		weatherStart = index+9;
+		//printf("Recieved Start tag at %i\n", index);
+	}
+	if(buffer[index] == '<' &&  buffer[index+1] == '/' && buffer[index+2] == 'w' && 			buffer[index+3] == 'e' && buffer[index+4] == 'a'){
+		weatherEnd = index;
+		//printf("Recieved End tag at %i\n", index);
+	}
+	/*End Weather Location Tags*/
+	/*Finding Weather Tags*/
+	if(buffer[index] == '<' &&  buffer[index+1] == 'w' && buffer[index+2] == 'e' && 			buffer[index+3] == 'a'){
+		weatherStart = index+9;
+	}
+	if(buffer[index] == '<' &&  buffer[index+1] == '/' && buffer[index+2] == 'w' && 			buffer[index+3] == 'e' && buffer[index+4] == 'a'){
+		weatherEnd = index;
+	}
+	/*End Weather Location Tags*/
+index++;
+}
+//stationText = returnParsed(stationStart, stationEnd, buffer);
+while(stationStart < stationEnd){
+	//Concatinate string
+	strncat(stationText, &buffer[stationStart], 1); 
+	stationStart++;
+}
+while(locationStart < locationEnd){
+	//Concatinate string
+	strncat(locationText, &buffer[locationStart], 1); 
+	locationStart++;
+}
+while(weatherStart < weatherEnd){
+	//Concatinate string
+	strncat(weatherText, &buffer[weatherStart], 1); 
+	weatherStart++;
+}
+
+printf("Station: %s\n", stationText);
+printf("Location: %s\n", locationText);
+printf("Weather: %s\n", weatherText);
 //Rest of main code starts here.....
 //printf("Message: %s\n", message_fmt);
 
