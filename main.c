@@ -154,10 +154,15 @@ fd = socket_connect(host, port, message_fmt);
 int byte_count;
 byte_count = recv(fd,buffer,sizeof(buffer)-1,0); // <-- -1 to leave room for a null terminator
 	buffer[byte_count] = 0; // <-- add the null terminator
-	printf("recv()'d %d bytes of data in buf\n",byte_count);
-	printf("%s",buffer);
+//	printf("recv()'d %d bytes of data in buf\n",byte_count); shows character count 
+//	printf("%s",buffer); this line will print what we receive from xml
 	printf("\n\n");
-
+//Got the information from the server. Now create/load a file and store this information
+FILE *fp;
+fp = fopen ("serverinfo.txt", "w");
+fputs(buffer,fp);
+fclose (fp);
+//saved the file
 /* 
 ----- What we need to parse ------
 Station – The 4 character station identifier <station_id></station_id>
@@ -166,10 +171,7 @@ Weather – Description of the conditions (i.e. Overcast) <weather></weather>
 Wind – String with wind speed and direction held between the tags <wind_string></wind_string>
 Temperature - Temp in F and C <temperature_string></temperature_string>
 Humidity – Percent humidity <relative_humidity></relative_humidity>
-
 You may include additional information held in other tags within the data  (like pressure_string, visibility_mi, etc)
-
-
 */
 int index = 0;
 
