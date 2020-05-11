@@ -28,8 +28,8 @@ int socket_connect(char *host, char *port, char *header){
 	    printf("GET Sent...\n");
 	return sockfd;
 }
-
-/*	-----This function will be called 
+/*
+	-----This function will be called 
 	to replace the 2nd while loops at the bottom---
 char *returnParsed(int start, int end, char buffer[]){
 	char *returnText[25];
@@ -145,7 +145,7 @@ message_fmt = "GET /KALO.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
          (station_number != 'd')&&(station_number != 'e')&&(station_number != 'f')&& 
          (station_number != 'g')&&(station_number != 'h')&&(station_number != 'i')&&
          (station_number != 'j')&&(station_number != 'k')&&(station_number != 'l')&&
-         (station_number != 'm')&&(station_number != 'n'));
+         (station_number != 'm')&&(station_number != 'n') && (sizeof(station_number) > 1));
 
 int fd;
 //Waits for user's choice to be a valid input.
@@ -154,8 +154,8 @@ fd = socket_connect(host, port, message_fmt);
 int byte_count;
 byte_count = recv(fd,buffer,sizeof(buffer)-1,0); // <-- -1 to leave room for a null terminator
 	buffer[byte_count] = 0; // <-- add the null terminator
-//	printf("recv()'d %d bytes of data in buf\n",byte_count); shows character count 
-//	printf("%s",buffer); this line will print what we receive from xml
+	printf("recv()'d %d bytes of data in buf\n",byte_count); //shows character count 
+	printf("%s",buffer); //this line will print what we receive from xml
 	printf("\n\n");
 //Got the information from the server. Now create/load a file and store this information
 FILE *fp;
@@ -188,7 +188,19 @@ int weatherStart = 0;
 int weatherEnd = 0;
 char weatherText[40];
 
-while(index < byte_count-5){
+int windStart = 0;
+int windEnd = 0;
+char windText[120];
+
+int tempStart = 0;
+int tempEnd = 0;
+char tempText[40];
+
+int humidStart = 0;
+int humidEnd = 0;
+char humidText[40];
+
+while(index < byte_count-8){
 
 	/*Finding Station Tags*/
 	if(buffer[index] == '<' &&  buffer[index+1] == 's' && buffer[index+2] == 't' && buffer[index+3] == 'a'){
@@ -216,6 +228,7 @@ while(index < byte_count-5){
 		//printf("Received End tag at %i\n", index);
 	}
 	/*End Weather Location Tags*/
+
 	/*Finding Weather Tags*/
 	if(buffer[index] == '<' &&  buffer[index+1] == 'w' && buffer[index+2] == 'e' && buffer[index+3] == 'a'){
 		weatherStart = index+9;
@@ -224,6 +237,34 @@ while(index < byte_count-5){
 		weatherEnd = index;
 	}
 	/*End Weather Location Tags*/
+
+	/*Finding Wind Tags*/
+	if(buffer[index] == '<' &&  buffer[index+1] == 'w' && buffer[index+2] == 'i' && buffer[index+3] == 'n'  && buffer[index+4] == 'd'  && buffer[index+5] == '_'  && buffer[index+6] == 's'){
+		windStart = index+13;
+	}
+	if(buffer[index] == '<' &&  buffer[index+1] == '/' && buffer[index+2] == 'w' && buffer[index+3] == 'i' && buffer[index+4] == 'n' && buffer[index+5] == 'd' && buffer[index+6] == '_' && buffer[index+7] == 's'){
+		windEnd = index;
+	}
+	/*End wind Location Tags*/
+
+	/*Finding Temp Tags*/
+	if(buffer[index] == '<' &&  buffer[index+1] == 't' && buffer[index+2] == 'e' && buffer[index+3] == 'm'  && buffer[index+4] == 'p'  && buffer[index+5] == 'e'  && buffer[index+6] == 'r'){
+		tempStart = index+20;
+	}
+	if(buffer[index] == '<' &&  buffer[index+1] == '/' && buffer[index+2] == 't' && buffer[index+3] == 'e' && buffer[index+4] == 'm' && buffer[index+5] == 'p' && buffer[index+6] == 'e' && buffer[index+7] == 'r'){
+		tempEnd = index;
+	}
+	/*End Temp Location Tags*/
+
+
+	/*Finding Humidity Tags*/
+	if(buffer[index] == '<' &&  buffer[index+1] == 'r' && buffer[index+2] == 'e' && buffer[index+3] == 'l'  && buffer[index+4] == 'a'){
+		humidStart = index+19;
+	}
+	if(buffer[index] == '<' &&  buffer[index+1] == '/' && buffer[index+2] == 'r' && buffer[index+3] == 'e' && buffer[index+4] == 'l' && buffer[index+5] == 'a'){
+		humidEnd = index;
+	}
+	/*End Temp Location Tags*/
 index++;
 }
 //stationText = returnParsed(stationStart, stationEnd, buffer);
@@ -242,10 +283,27 @@ while(weatherStart < weatherEnd){
 	strncat(weatherText, &buffer[weatherStart], 1); 
 	weatherStart++;
 }
-
+while(windStart < windEnd){
+	//Concatenate string
+	strncat(windText, &buffer[windStart], 1); 
+	windStart++;
+}
+while(tempStart < tempEnd){
+	//Concatenate string
+	strncat(tempText, &buffer[tempStart], 1); 
+	tempStart++;
+}
+while(humidStart < humidEnd){
+	//Concatenate string
+	strncat(humidText, &buffer[humidStart], 1); 
+	humidStart++;
+}
 printf("Station: %s\n", stationText);
 printf("Location: %s\n", locationText);
 printf("Weather: %s\n", weatherText);
+printf("Wind: %s\n", windText);
+printf("Temperature: %s\n", tempText);
+printf("Humidity: %s\n", humidText);
 //Rest of main code starts here.....
 //printf("Message: %s\n", message_fmt);
 
