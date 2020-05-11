@@ -9,6 +9,7 @@
 #include <netdb.h>
 #include <netinet/tcp.h>
 
+
 int socket_connect(char *host, char *port, char *header){
 	
 	struct addrinfo hints, *res;    
@@ -40,6 +41,20 @@ char *returnParsed(int start, int end, char buffer[]){
 	return returnText;
 }
 */
+char checkAFK(){
+	char station_num;
+	time_t seconds;
+	int startingSec = 0;
+	startingSec = time(NULL);
+	scanf(" %c", &station_num);
+	seconds = time(NULL);
+	if(startingSec+60 <= seconds){
+		printf("Timer ran out...\n");
+		exit(0);
+	}
+	return station_num;
+}
+
 #define BUFFER_SIZE 4096
 
 int main(int argc, char *argv){
@@ -62,7 +77,8 @@ printf("(k) Ottumwa\n(l) Sioux City\n");
 printf("(m) Spencer\n(n) Waterloo\n");
 
 do {
-scanf(" %c", &station_number);
+
+station_number = checkAFK();
 //After a-n is entered, choose the corresponding URL.
     switch(station_number){
     case 'a':
@@ -154,9 +170,9 @@ fd = socket_connect(host, port, message_fmt);
 int byte_count;
 byte_count = recv(fd,buffer,sizeof(buffer)-1,0); // <-- -1 to leave room for a null terminator
 	buffer[byte_count] = 0; // <-- add the null terminator
-	printf("recv()'d %d bytes of data in buf\n",byte_count); //shows character count 
-	printf("%s",buffer); //this line will print what we receive from xml
-	printf("\n\n");
+	//printf("recv()'d %d bytes of data in buf\n",byte_count); //shows character count 
+	//printf("%s",buffer); //this line will print what we receive from xml
+	//printf("\n\n");
 //Got the information from the server. Now create/load a file and store this information
 FILE *fp;
 fp = fopen ("serverinfo.txt", "w");
