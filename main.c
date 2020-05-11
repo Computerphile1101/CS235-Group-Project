@@ -189,36 +189,36 @@ char weatherText[40];
 while(index < byte_count-5){
 
 	/*Finding Station Tags*/
-	if(buffer[index] == '<' &&  buffer[index+1] == 's' && buffer[index+2] == 't' && 			buffer[index+3] == 'a'){
+	if(buffer[index] == '<' &&  buffer[index+1] == 's' && buffer[index+2] == 't' && buffer[index+3] == 'a'){
 		stationStart = index+12;//12 spots after the starting point of <
 	}
-	if(buffer[index] == '<' &&  buffer[index+1] == '/' && buffer[index+2] == 's' && 			buffer[index+3] == 't' && buffer[index+4] == 'a'){
+	if(buffer[index] == '<' &&  buffer[index+1] == '/' && buffer[index+2] == 's' && buffer[index+3] == 't' && buffer[index+4] == 'a'){
 		stationEnd = index;
 	}
 	/*End Finding Station Tags*/
 	/*Finding Location Tags*/
-	if(buffer[index] == '<' &&  buffer[index+1] == 'l' && buffer[index+2] == 'o' && 			buffer[index+3] == 'c'){
+	if(buffer[index] == '<' &&  buffer[index+1] == 'l' && buffer[index+2] == 'o' && buffer[index+3] == 'c'){
 		locationStart = index+10;
 	}
-	if(buffer[index] == '<' &&  buffer[index+1] == '/' && buffer[index+2] == 'l' && 			buffer[index+3] == 'o' && buffer[index+4] == 'c'){
+	if(buffer[index] == '<' &&  buffer[index+1] == '/' && buffer[index+2] == 'l' && buffer[index+3] == 'o' && buffer[index+4] == 'c'){
 		locationEnd = index;
 	}
 	/*End Finding Location Tags*/
 	/*Finding Weather Tags*/
-	if(buffer[index] == '<' &&  buffer[index+1] == 'w' && buffer[index+2] == 'e' && 			buffer[index+3] == 'a'){
+	if(buffer[index] == '<' &&  buffer[index+1] == 'w' && buffer[index+2] == 'e' && buffer[index+3] == 'a'){
 		weatherStart = index+9;
 		//printf("Recieved Start tag at %i\n", index);
 	}
-	if(buffer[index] == '<' &&  buffer[index+1] == '/' && buffer[index+2] == 'w' && 			buffer[index+3] == 'e' && buffer[index+4] == 'a'){
+	if(buffer[index] == '<' &&  buffer[index+1] == '/' && buffer[index+2] == 'w' && buffer[index+3] == 'e' && buffer[index+4] == 'a'){
 		weatherEnd = index;
 		//printf("Recieved End tag at %i\n", index);
 	}
 	/*End Weather Location Tags*/
 	/*Finding Weather Tags*/
-	if(buffer[index] == '<' &&  buffer[index+1] == 'w' && buffer[index+2] == 'e' && 			buffer[index+3] == 'a'){
+	if(buffer[index] == '<' &&  buffer[index+1] == 'w' && buffer[index+2] == 'e' && buffer[index+3] == 'a'){
 		weatherStart = index+9;
 	}
-	if(buffer[index] == '<' &&  buffer[index+1] == '/' && buffer[index+2] == 'w' && 			buffer[index+3] == 'e' && buffer[index+4] == 'a'){
+	if(buffer[index] == '<' &&  buffer[index+1] == '/' && buffer[index+2] == 'w' && buffer[index+3] == 'e' && buffer[index+4] == 'a'){
 		weatherEnd = index;
 	}
 	/*End Weather Location Tags*/
