@@ -9,7 +9,7 @@
 #include <netdb.h>
 #include <netinet/tcp.h>
 
-
+//Function to create the socket
 int socket_connect(char *host, char *port, char *header){
 	
 	struct addrinfo hints, *res;    
@@ -166,7 +166,7 @@ message_fmt = "GET /KALO.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
          (station_number != 'm')&&(station_number != 'n') && (sizeof(station_number) > 1));
 
 int fd;
-//Waits for user's choice to be a valid input.
+//Waits for the user's choice to be a valid input, then calls the socket function.
 fd = socket_connect(host, port, message_fmt);
 
 int byte_count;
