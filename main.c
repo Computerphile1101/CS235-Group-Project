@@ -170,9 +170,9 @@ int fd;
 fd = socket_connect(host, port, message_fmt);
 
 int byte_count;
-byte_count = recv(fd,buffer,sizeof(buffer)-1,0); // <-- -1 to leave room for a null terminator
-	buffer[byte_count] = 0; // <-- add the null terminator
-	//printf("recv()'d %d bytes of data in buf\n",byte_count); Shows character count.
+byte_count = recv(fd,buffer,sizeof(buffer)-1,0); // <-- "-1" Leaves room for a null terminator.
+	buffer[byte_count] = 0; // <-- This adds the null terminator
+	//printf("recv()'d %d bytes of data in buf\n",byte_count); //Shows character count.
 	//printf("%s",buffer); //Prints the XML from the buffer. 
 	//printf("\n\n");
 //After the information is extracted from the server, this creates a local file and stores the information.
@@ -180,7 +180,7 @@ FILE *fp;
 fp = fopen ("serverinfo.txt", "w");
 fputs(buffer,fp);
 fclose (fp);
-//saved the file
+
 /* 
 ----- What we need to parse ------
 Station – The 4 character station identifier <station_id></station_id>
@@ -199,8 +199,7 @@ char stationText[10];
 
 int locationStart = 0;
 int locationEnd = 0;
-char locationText[50];//these have to be big enough otherwise it will
-//cause errors.
+char locationText[50];
 
 int weatherStart = 0;
 int weatherEnd = 0;
@@ -220,23 +219,23 @@ char humidText[40];
 
 while(index < byte_count-8){
 
-	/*Finding Station Tags*/
+	//Station Tags
 	if(buffer[index] == '<' &&  buffer[index+1] == 's' && buffer[index+2] == 't' && buffer[index+3] == 'a'){
 		stationStart = index+12;//12 spots after the starting point of <
 	}
 	if(buffer[index] == '<' &&  buffer[index+1] == '/' && buffer[index+2] == 's' && buffer[index+3] == 't' && buffer[index+4] == 'a'){
 		stationEnd = index;
 	}
-	/*End Finding Station Tags*/
-	/*Finding Location Tags*/
+	
+	//Location Tags
 	if(buffer[index] == '<' &&  buffer[index+1] == 'l' && buffer[index+2] == 'o' && buffer[index+3] == 'c'){
 		locationStart = index+10;
 	}
 	if(buffer[index] == '<' &&  buffer[index+1] == '/' && buffer[index+2] == 'l' && buffer[index+3] == 'o' && buffer[index+4] == 'c'){
 		locationEnd = index;
 	}
-	/*End Finding Location Tags*/
-	/*Finding Weather Tags*/
+	
+	//Weather Tags
 	if(buffer[index] == '<' &&  buffer[index+1] == 'w' && buffer[index+2] == 'e' && buffer[index+3] == 'a'){
 		weatherStart = index+9;
 		//printf("Received Start tag at %i\n", index);
@@ -245,44 +244,40 @@ while(index < byte_count-8){
 		weatherEnd = index;
 		//printf("Received End tag at %i\n", index);
 	}
-	/*End Weather Location Tags*/
-
-	/*Finding Weather Tags*/
+	
+	/*
 	if(buffer[index] == '<' &&  buffer[index+1] == 'w' && buffer[index+2] == 'e' && buffer[index+3] == 'a'){
 		weatherStart = index+9;
 	}
 	if(buffer[index] == '<' &&  buffer[index+1] == '/' && buffer[index+2] == 'w' && buffer[index+3] == 'e' && buffer[index+4] == 'a'){
 		weatherEnd = index;
 	}
-	/*End Weather Location Tags*/
+	*/
 
-	/*Finding Wind Tags*/
+	//Wind Tags
 	if(buffer[index] == '<' &&  buffer[index+1] == 'w' && buffer[index+2] == 'i' && buffer[index+3] == 'n'  && buffer[index+4] == 'd'  && buffer[index+5] == '_'  && buffer[index+6] == 's'){
 		windStart = index+13;
 	}
 	if(buffer[index] == '<' &&  buffer[index+1] == '/' && buffer[index+2] == 'w' && buffer[index+3] == 'i' && buffer[index+4] == 'n' && buffer[index+5] == 'd' && buffer[index+6] == '_' && buffer[index+7] == 's'){
 		windEnd = index;
 	}
-	/*End wind Location Tags*/
-
-	/*Finding Temp Tags*/
+	
+	//Temperature Tags
 	if(buffer[index] == '<' &&  buffer[index+1] == 't' && buffer[index+2] == 'e' && buffer[index+3] == 'm'  && buffer[index+4] == 'p'  && buffer[index+5] == 'e'  && buffer[index+6] == 'r'){
 		tempStart = index+20;
 	}
 	if(buffer[index] == '<' &&  buffer[index+1] == '/' && buffer[index+2] == 't' && buffer[index+3] == 'e' && buffer[index+4] == 'm' && buffer[index+5] == 'p' && buffer[index+6] == 'e' && buffer[index+7] == 'r'){
 		tempEnd = index;
 	}
-	/*End Temp Location Tags*/
-
-
-	/*Finding Humidity Tags*/
+	
+	//Humidity Tags
 	if(buffer[index] == '<' &&  buffer[index+1] == 'r' && buffer[index+2] == 'e' && buffer[index+3] == 'l'  && buffer[index+4] == 'a'){
 		humidStart = index+19;
 	}
 	if(buffer[index] == '<' &&  buffer[index+1] == '/' && buffer[index+2] == 'r' && buffer[index+3] == 'e' && buffer[index+4] == 'l' && buffer[index+5] == 'a'){
 		humidEnd = index;
 	}
-	/*End Temp Location Tags*/
+	
 index++;
 }
 //stationText = returnParsed(stationStart, stationEnd, buffer);
@@ -322,8 +317,5 @@ printf("Weather: %s\n", weatherText);
 printf("Wind: %s\n", windText);
 printf("Temperature: %s\n", tempText);
 printf("Humidity: %s\n", humidText);
-//Rest of main code starts here.....
-//printf("Message: %s\n", message_fmt);
 
-
-}// end of main
+}//End of main
