@@ -100,7 +100,7 @@ message_fmt = "GET /KCID.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
 
     case'd':
         //Get Council Bluffs URL
-message_fmt = "GET /KCFB.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
+message_fmt = "GET /KCBF.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
         break;
 
     case'e':
@@ -140,7 +140,7 @@ message_fmt = "GET /KOTM.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
 
     case'l':
         //Get Sioux City URL
-message_fmt = "GET /KSUX.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
+message_fmt = "GET /KSXK.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
         break;
 
     case'm':
