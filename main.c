@@ -1,3 +1,9 @@
+/*
+Nick Sueppel, Keegan Hutchins, Alan Milliman
+Weather Observation Retriever
+Created 5/12/2020
+*/
+
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
