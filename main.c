@@ -15,7 +15,7 @@ int socket_connect(char *host, char *port, char *header){
 	struct addrinfo hints, *res;    
 	int sockfd;  
 
-	 //get host info, make socket and connect it
+	 //Gets the host information, then makes and connects the socket.
 	    memset(&hints, 0,sizeof hints);
 	    hints.ai_family=AF_UNSPEC;
 	    hints.ai_socktype = SOCK_STREAM;
@@ -41,6 +41,8 @@ char *returnParsed(int start, int end, char buffer[]){
 	return returnText;
 }
 */
+
+//Function for 60 second timer.
 char checkAFK(){
 	char station_num;
 	time_t seconds;
@@ -79,7 +81,7 @@ printf("(m) Spencer\n(n) Waterloo\n");
 do {
 
 station_number = checkAFK();
-//After a-n is entered, choose the corresponding URL.
+//After a-n is entered, the corresponding weather URL is chosen.
     switch(station_number){
     case 'a':
         //Get Ames URL
@@ -170,10 +172,10 @@ fd = socket_connect(host, port, message_fmt);
 int byte_count;
 byte_count = recv(fd,buffer,sizeof(buffer)-1,0); // <-- -1 to leave room for a null terminator
 	buffer[byte_count] = 0; // <-- add the null terminator
-	//printf("recv()'d %d bytes of data in buf\n",byte_count); //shows character count 
-	//printf("%s",buffer); //this line will print what we receive from xml
+	//printf("recv()'d %d bytes of data in buf\n",byte_count); Shows character count.
+	//printf("%s",buffer); //Prints the XML from the buffer. 
 	//printf("\n\n");
-//Got the information from the server. Now create/load a file and store this information
+//After the information is extracted from the server, this creates a local file and stores the information.
 FILE *fp;
 fp = fopen ("serverinfo.txt", "w");
 fputs(buffer,fp);
