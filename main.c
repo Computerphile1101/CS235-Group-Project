@@ -24,7 +24,6 @@ int socket_connect(char *host, char *port, char *header){
 	    printf("Connecting...\n");
 	    connect(sockfd,res->ai_addr,res->ai_addrlen);
 	    printf("Connected!\n");
-	    //char *header = "GET /KCID.xml HTTP/1.0\r\nHost: www.n0gud.net\r\n\r\n";
 	    send(sockfd,header,strlen(header),0);
 	    printf("GET Sent...\n");
 	return sockfd;
@@ -32,7 +31,7 @@ int socket_connect(char *host, char *port, char *header){
 
 /*      Work-in-progress function to maximize effiency.
 	
-	//Would replace the 2nd set of while loops at the bottom.
+	//Would replace the set of while loops at the bottom.
 char *returnParsed(int start, int end, char buffer[]){
 	char *returnText[25];
 	while(start < end){
