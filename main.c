@@ -246,15 +246,6 @@ while(index < byte_count-8){
 		//printf("Received End tag at %i\n", index);
 	}
 	
-	/*
-	if(buffer[index] == '<' &&  buffer[index+1] == 'w' && buffer[index+2] == 'e' && buffer[index+3] == 'a'){
-		weatherStart = index+9;
-	}
-	if(buffer[index] == '<' &&  buffer[index+1] == '/' && buffer[index+2] == 'w' && buffer[index+3] == 'e' && buffer[index+4] == 'a'){
-		weatherEnd = index;
-	}
-	*/
-
 	//Wind Tags
 	if(buffer[index] == '<' &&  buffer[index+1] == 'w' && buffer[index+2] == 'i' && buffer[index+3] == 'n'  && buffer[index+4] == 'd'  && buffer[index+5] == '_'  && buffer[index+6] == 's'){
 		windStart = index+13;
@@ -281,7 +272,7 @@ while(index < byte_count-8){
 	
 index++;
 }
-//stationText = returnParsed(stationStart, stationEnd, buffer);
+//stationText = returnParsed(stationStart, stationEnd, buffer); //work-in-progress function call.
 while(stationStart < stationEnd){
 	//Concatenate string
 	strncat(stationText, &buffer[stationStart], 1); 
