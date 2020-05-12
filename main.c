@@ -29,9 +29,10 @@ int socket_connect(char *host, char *port, char *header){
 	    printf("GET Sent...\n");
 	return sockfd;
 }
-/*
-	-----This function will be called 
-	to replace the 2nd while loops at the bottom---
+
+/*      Work-in-progress function to maximize effiency.
+	
+	//Would replace the 2nd set of while loops at the bottom.
 char *returnParsed(int start, int end, char buffer[]){
 	char *returnText[25];
 	while(start < end){
